@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AfterlifeApp.Controllers
 {
-    [Authorize(Roles = "Administrator")]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -48,6 +47,7 @@ namespace AfterlifeApp.Controllers
         }
 
         // GET: Categories/Create
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
@@ -70,6 +70,7 @@ namespace AfterlifeApp.Controllers
         }
 
         // GET: Categories/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Category == null)
@@ -121,6 +122,7 @@ namespace AfterlifeApp.Controllers
         }
 
         // GET: Categories/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Category == null)
