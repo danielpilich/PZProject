@@ -48,7 +48,7 @@ namespace AfterlifeApp.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Id");
+            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Name");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace AfterlifeApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Id", order.GameId);
+            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Name", order.GameId);
             return View(order);
         }
 
@@ -82,7 +82,7 @@ namespace AfterlifeApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Id", order.GameId);
+            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Name", order.GameId);
             return View(order);
         }
 
@@ -118,7 +118,7 @@ namespace AfterlifeApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Id", order.GameId);
+            ViewData["GameId"] = new SelectList(_context.Game, "Id", "Name", order.GameId);
             return View(order);
         }
 

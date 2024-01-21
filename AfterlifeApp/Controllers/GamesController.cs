@@ -49,8 +49,8 @@ namespace AfterlifeApp.Controllers
         // GET: Games/Create
         public IActionResult Create()
         {
-            ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Id");
-            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id");
+            ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Name");
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Name");
             return View();
         }
 
@@ -67,8 +67,8 @@ namespace AfterlifeApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Id", game.BundleId);
-            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id", game.CategoryId);
+            ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Name", game.BundleId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Name", game.CategoryId);
             return View(game);
         }
 
@@ -85,8 +85,8 @@ namespace AfterlifeApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Id", game.BundleId);
-            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id", game.CategoryId);
+            ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Name", game.BundleId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Name", game.CategoryId);
             return View(game);
         }
 
@@ -122,8 +122,8 @@ namespace AfterlifeApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Id", game.BundleId);
-            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Id", game.CategoryId);
+            ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Name", game.BundleId);
+            ViewData["CategoryId"] = new SelectList(_context.Category, "Id", "Name", game.CategoryId);
             return View(game);
         }
 
