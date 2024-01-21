@@ -28,6 +28,12 @@ namespace AfterlifeApp.Controllers
         public async Task<IActionResult> Index()
         {
             IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Administrator");
+            if (isAdmin)
+            {
+                return View(await _context.Order.Include(o => o.Game).Include(m => m.User).ToListAsync());
+            }
+
             return _context.Order != null ?
                         View(await _context.Order.Where(m => m.User == user).Include(o => o.Game).Include(m => m.User).ToListAsync()) :
                         Problem("Entity set 'ApplicationDbContext.Order'  is null.");
@@ -37,6 +43,7 @@ namespace AfterlifeApp.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Administrator");
             if (id == null || _context.Order == null)
             {
                 return NotFound();
@@ -44,11 +51,16 @@ namespace AfterlifeApp.Controllers
 
             var order = await _context.Order
                 .Include(o => o.Game)
-                .Where(m => m.User == user)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
                 return NotFound();
+            }
+
+            if (order.User != user && !isAdmin)
+            {
+                // If not the owner or an admin, return an unauthorized view or redirect
+                return Forbid();
             }
 
             return View(order);
@@ -84,6 +96,7 @@ namespace AfterlifeApp.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Administrator");
             if (id == null || _context.Order == null)
             {
                 return NotFound();
@@ -95,9 +108,9 @@ namespace AfterlifeApp.Controllers
                 return NotFound();
             }
 
-            if (order.User != user)
+            if (order.User != user && !isAdmin)
             {
-                // If not the owner, return an unauthorized view or redirect
+                // If not the owner or an admin, return an unauthorized view or redirect
                 return Forbid();
             }
             ViewData["GameId"] = new SelectList(_context.Game, "Id", "Name", order.GameId);
@@ -144,6 +157,7 @@ namespace AfterlifeApp.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Administrator");
             if (id == null || _context.Order == null)
             {
                 return NotFound();
@@ -157,9 +171,9 @@ namespace AfterlifeApp.Controllers
                 return NotFound();
             }
 
-            if (order.User != user)
+            if (order.User != user && !isAdmin)
             {
-                // If not the owner, return an unauthorized view or redirect
+                // If not the owner or an admin, return an unauthorized view or redirect
                 return Forbid();
             }
 
