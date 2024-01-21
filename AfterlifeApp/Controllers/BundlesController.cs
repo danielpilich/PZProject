@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AfterlifeApp.Data;
 using AfterlifeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AfterlifeApp.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class BundlesController : Controller
     {
         private readonly ApplicationDbContext _context;
