@@ -23,19 +23,21 @@ namespace AfterlifeApp.Controllers
         public async Task<IActionResult> Index()
         {
             List<int> gamesInBundles = new List<int>();
+            List<double> bundlePrice = new List<double>();
 
-            if(_context.Game == null)
-            {
-                gamesInBundles.Add(0);
-            }
-            foreach (var game in _context.Game)
+            foreach (var bundle in _context.Bundle)
             {
                 gamesInBundles.Add(_context.Game
-                        .Where(e => e.Id  == game.BundleId)
+                        .Where(g => g.BundleId == bundle.Id)
                         .Count());
+
+                bundlePrice.Add(_context.Game
+                        .Where(g => g.BundleId == bundle.Id)
+                        .Sum(g => g.Price));
             }
 
             ViewBag.GamesInBundles = gamesInBundles;
+            ViewBag.BundlePrice = bundlePrice;
 
             return _context.Bundle != null ? 
                           View(await _context.Bundle.ToListAsync()) :

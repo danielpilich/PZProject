@@ -22,6 +22,9 @@
             <th>
                 Ilość gier w zestawie
             </th>
+            <th>
+                Pełna cena zestawu
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -39,16 +42,25 @@
                     @counter
                 }
                 else{
-                    @ViewBag.GamesInBundles[counter]
-                    counter++;
+                    @ViewBag.GamesInBundles[counter]                    
                 }
+            </td>
+            <td>
+                @if(@ViewBag.GamesInBundles.Count == 0){
+                    @counter
+                }
+                else{
+                    @ViewBag.BundlePrice[counter]
+                }
+                 
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
-        </tr>        
+        </tr>     
+        counter++;
 }
     </tbody>
 </table>
