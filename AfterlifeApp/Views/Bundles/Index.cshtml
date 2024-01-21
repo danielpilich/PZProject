@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Index";
+    int counter = 0;
 }
 
 <h1>Index</h1>
@@ -18,6 +19,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
+            <th>
+                Ilość gier w zestawie
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -31,11 +35,20 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
+                @if(@ViewBag.GamesInBundles.Count == 0){
+                    @counter
+                }
+                else{
+                    @ViewBag.GamesInBundles[counter]
+                    counter++;
+                }
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
-        </tr>
+        </tr>        
 }
     </tbody>
 </table>

@@ -22,7 +22,22 @@ namespace AfterlifeApp.Controllers
         // GET: Bundles
         public async Task<IActionResult> Index()
         {
-              return _context.Bundle != null ? 
+            List<int> gamesInBundles = new List<int>();
+
+            if(_context.Game == null)
+            {
+                gamesInBundles.Add(0);
+            }
+            foreach (var game in _context.Game)
+            {
+                gamesInBundles.Add(_context.Game
+                        .Where(e => e.Id  == game.BundleId)
+                        .Count());
+            }
+
+            ViewBag.GamesInBundles = gamesInBundles;
+
+            return _context.Bundle != null ? 
                           View(await _context.Bundle.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Bundle'  is null.");
         }
