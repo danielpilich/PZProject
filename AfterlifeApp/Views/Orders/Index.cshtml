@@ -1,14 +1,20 @@
 ﻿@model IEnumerable<AfterlifeApp.Models.Order>
+@using Microsoft.AspNetCore.Identity
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Orders";
 }
 
-<h1>Orders</h1>
+<h1 style="text-align:center">Your Orders</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
+<p style="text-align:center">
+    <a asp-action="Create"
+        role="button" class="btn btn-outline-primary">
+        Make New Order
+    </a>
 </p>
+<br />
+
 <table class="table">
     <thead>
         <tr>
