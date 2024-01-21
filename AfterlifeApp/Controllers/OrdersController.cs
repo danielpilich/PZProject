@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AfterlifeApp.Data;
 using AfterlifeApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace AfterlifeApp.Controllers
 {
@@ -15,22 +16,27 @@ namespace AfterlifeApp.Controllers
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public OrdersController(ApplicationDbContext context)
+        public OrdersController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Order.Include(o => o.Game);
-            return View(await applicationDbContext.ToListAsync());
+            IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            return _context.Order != null ?
+                        View(await _context.Order.Where(m => m.User == user).Include(o => o.Game).Include(m => m.User).ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Order'  is null.");
         }
 
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
             if (id == null || _context.Order == null)
             {
                 return NotFound();
@@ -38,6 +44,7 @@ namespace AfterlifeApp.Controllers
 
             var order = await _context.Order
                 .Include(o => o.Game)
+                .Where(m => m.User == user)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (order == null)
             {
@@ -61,6 +68,8 @@ namespace AfterlifeApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Date,GameId")] Order order)
         {
+            IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            order.User = user;
             if (ModelState.IsValid)
             {
                 _context.Add(order);
@@ -74,6 +83,7 @@ namespace AfterlifeApp.Controllers
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
             if (id == null || _context.Order == null)
             {
                 return NotFound();
@@ -83,6 +93,12 @@ namespace AfterlifeApp.Controllers
             if (order == null)
             {
                 return NotFound();
+            }
+
+            if (order.User != user)
+            {
+                // If not the owner, return an unauthorized view or redirect
+                return Forbid();
             }
             ViewData["GameId"] = new SelectList(_context.Game, "Id", "Name", order.GameId);
             return View(order);
@@ -127,6 +143,7 @@ namespace AfterlifeApp.Controllers
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
             if (id == null || _context.Order == null)
             {
                 return NotFound();
@@ -138,6 +155,12 @@ namespace AfterlifeApp.Controllers
             if (order == null)
             {
                 return NotFound();
+            }
+
+            if (order.User != user)
+            {
+                // If not the owner, return an unauthorized view or redirect
+                return Forbid();
             }
 
             return View(order);

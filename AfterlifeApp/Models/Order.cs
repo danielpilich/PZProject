@@ -1,4 +1,6 @@
-﻿namespace AfterlifeApp.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace AfterlifeApp.Models
 {
     public class Order
     {
@@ -6,5 +8,6 @@
         public DateTime Date { get; set; }
         public int GameId { get; set; }
         public virtual Game? Game { get; set; }
+        public IdentityUser? User { get; set; }
     }
 }

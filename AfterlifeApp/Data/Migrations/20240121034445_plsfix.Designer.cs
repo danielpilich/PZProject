@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AfterlifeApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240121015451_users")]
-    partial class users
+    [Migration("20240121034445_plsfix")]
+    partial class plsfix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
