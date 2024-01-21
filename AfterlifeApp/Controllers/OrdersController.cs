@@ -199,6 +199,43 @@ namespace AfterlifeApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Orders/Download/5
+        public async Task<IActionResult> Download(int? id)
+        {
+            IdentityUser user = _userManager.FindByNameAsync(User.Identity.Name).Result;
+            if (id == null || _context.Order == null)
+            {
+                return NotFound();
+            }
+
+            var order = await _context.Order
+                .Include(o => o.Game)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            if (user == null || order.User != user)
+            {
+                // If the current user is not the owner, return an unauthorized view or redirect
+                return Forbid();
+            }
+
+            return View(order);
+        }
+
+        [HttpPost, ActionName("DownloadConfirmed")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DownloadConfirmed(int id)
+        {
+            // Implement download logic here (e.g., initiate download process)
+
+            // For now, redirect back to the list after confirming download
+            return View();
+        }
+
         private bool OrderExists(int id)
         {
           return (_context.Order?.Any(e => e.Id == id)).GetValueOrDefault();
