@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AfterlifeApp.Data;
 using AfterlifeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AfterlifeApp.Controllers
 {
@@ -47,6 +48,7 @@ namespace AfterlifeApp.Controllers
         }
 
         // GET: Games/Create
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             ViewData["BundleId"] = new SelectList(_context.Bundle, "Id", "Name");
@@ -73,6 +75,7 @@ namespace AfterlifeApp.Controllers
         }
 
         // GET: Games/Edit/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Game == null)
@@ -128,6 +131,7 @@ namespace AfterlifeApp.Controllers
         }
 
         // GET: Games/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Game == null)
